@@ -6,8 +6,8 @@ function GamestateManager:initialize()
   self.states = {
     splash = require('states.splash'):new('splash'),
     mainmenu = require('states.mainmenu'):new('mainmenu'),
-    --gameplay = require('states.gameplay'):new('gameplay'),
-    --credits = require('states.credits'):new('credits'),
+    gameplay = require('states.gameplay'):new('gameplay'),
+    credits = require('states.credits'):new('credits'),
     exit = require('states.exit'):new('exit'),
   }
   self.current = { }
