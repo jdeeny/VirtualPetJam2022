@@ -4,8 +4,8 @@ local Splash = class('Splash', Gamestate)
 
 function Splash:initialize(name)
   Gamestate.initialize(self, name)
-  self.forcewatch_time = 1.0
-  self.fade = 1.0
+  self.forcewatch_time = 0.01
+  self.fade = 0.1
 end
 
 function Splash:enter()
