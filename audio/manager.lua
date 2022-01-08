@@ -48,7 +48,7 @@ function AudioManager:update(dt)
   tablex.pairmap(function(handle, clip)
 	clip:update(dt)
   end, self.active)
-  local lX, lY, lZ = unpack {System.camera:position()}
+  local lX, lY, lZ = {0,0,0} -- unpack {System.camera:position()}
 
   love.audio.setOrientation(1, 0, 0, 0, 0, 0)
   love.audio.setPosition(0, 1, 0)
@@ -125,7 +125,7 @@ function AudioManager:music_play(track)
   self.music = t
   self.currentMusic = track
   self.isMusicPlaying = true
-  self.music:play()
+  if self.music then self.music:play() end
 end
 
 -- Stop all music
@@ -195,24 +195,6 @@ function AudioManager:playRandomMusic()
 	local newMusic = love.math.random(table.getn(self.musicTracks))
 	self:music_play(self.musicTracks[newMusic])
 end
-
-
-
-Signal.register(SignalList.RemoveBuilding, function(o)
-  if o == nil then
-    print("BuildingDestroy with nil object!")
-    return
-  end
-
-  local clip = _get_sound(o, "Removed")
-  if clip then
-    print("Clip: ", clip)
-  else
-    print("RemoveBuilding Clip not found")
-  end
-  System.audio:play('game', o, clip)
-end)
-
 
 
 
