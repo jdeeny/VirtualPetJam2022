@@ -1,0 +1,3 @@
+local signals = {}
+
+return signals
