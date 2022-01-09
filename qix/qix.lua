@@ -1,6 +1,10 @@
 local class = require 'lib.middleclass'
 
+local Path = require 'qix.path'
+local Zone = require 'qix.zone'
+
 local Qix = class('Qix')
+
 
 function Qix:initialize()
     self.zones = {}
@@ -12,11 +16,20 @@ end
 
 function Qix:update(dt)
     local input_x, input_y = System.playerInput:get 'move'
+    local input_marker = System.playerInput:get 'action' == 1 or false
+
     self:move_cursor(input_x * self.speed, input_y * self.speed)
     if self.current_path then
         local result = self.current_path:extend_to(self.cursor.x, self.cursor.y)
         if result == "zone" then
             print("Convert path into zone")
+        end
+        if not input_marker then 
+            self:endPath()
+        end
+    else
+        if input_marker then
+            self:beginPath()
         end
     end
 end
@@ -35,12 +48,12 @@ function Qix:move_cursor(x, y)
     self.cursor.y = new_y
 end
 
-function Qix:beginPath(x, y)
+function Qix:beginPath()
     if self.current_path then
         print("Tried to start new path while existing path is active")
         return
     end
-    self.current_path = Path:new(x, y)
+    self.current_path = Path:new(self.size.x, self.size.y)
 end
 
 function Qix:endPath()

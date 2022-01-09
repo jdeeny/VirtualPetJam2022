@@ -11,7 +11,7 @@ function GamestateManager:initialize()
     exit = require('states.exit'):new('exit'),
   }
   self.current = { }
-  self:setState('splash')
+  self:setState('gameplay')
 end
 
 -- Sets the state, dropping any in the stack
