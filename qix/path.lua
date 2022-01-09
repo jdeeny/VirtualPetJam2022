@@ -14,7 +14,7 @@ function Path:initialize(x_size, y_size)
     self.last = {x=nil, y=nil}
     local canvas_settings = {
         type = "2d",
-        --format = "r32f",   --a single 32 bit float
+        format = "r32f",   --a single 32 bit float
         readable = true,
         msaa = 0,
         dpiscale = 1.0,
@@ -32,10 +32,11 @@ end
 
 function Path:update(dt)
     if not self.aborted then
-        self.elapsed = self.elapsed + dt * 0.05
+        self.elapsed = self.elapsed + dt
     else
         self.elapsed = math.max(self.elapsed - (dt * self.abort_speed), 0)
     end
+    print("path elapsed: ".. self.elapsed)
 end
 
 
@@ -52,18 +53,18 @@ function Path:beginPath(x, y)
     --self:reset_image()
     self.last = {x=0,y=0}
     self:setPixel(x,y)
+    self.last_color = self.elapsed
     self.image:replacePixels(self.image_data)
 end
 
 function Path:setPixel(x, y)
-    print("set "..x.." "..y)
+    --print("set "..x.." "..y)
     local check = self:checkPixel(x,y)
     print(check)
     self.image_data:setPixel(x, y, self.elapsed, 0.1, 0.1, 1.0)
     self.last.x = x
     self.last.y = y
-    self.last_color = self.elapsed
-    print("last color: "..self.last_color)
+    --print("last color: "..self.last_color)
 end
 
 function Path:extend_to(x, y)
@@ -96,7 +97,8 @@ function Path:extend_to(x, y)
         end
     end
     
-    self:setPixel(x, y)
+--    self:setPixel(x, y)
+    self.last_color = self.elapsed
     self.image:replacePixels(self.image_data)
 end
 
@@ -120,7 +122,7 @@ end
 
 function Path:draw()
     love.graphics.draw(self.image)
-    print("draw path")
+    --print("draw path")
 end
 
 return Path

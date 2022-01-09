@@ -19,12 +19,15 @@ function Qix:update(dt)
     local input_marker = System.playerInput:get 'action' == 1 or false
 
     self:move_cursor(input_x * self.speed, input_y * self.speed)
-    if self.current_path then
+    if self.current_path and self.current_path.aborted and self.current_path.elapsed <= 0 then
+        self.current_path = nil
+    end
+    if self.current_path and not self.current_path.aborted then
         local result = self.current_path:extend_to(self.cursor.x, self.cursor.y)
         if result == "zone" then
             print("Convert path into zone")
         end
-        if not input_marker then 
+        if not input_marker then
             self:endPath()
         end
     else
