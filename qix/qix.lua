@@ -32,6 +32,7 @@ function Qix:update(dt)
             self:beginPath()
         end
     end
+    if self.current_path then self.current_path:update(dt) end
 end
 
 

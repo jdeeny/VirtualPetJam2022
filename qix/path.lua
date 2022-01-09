@@ -9,6 +9,7 @@ function Path:initialize(x_size, y_size)
     end
     self.elapsed = 0
     self.last_color = 0
+    self.abort_speed = 10
     self.size = {x=x_size, y=y_size}
     self.last = {x=nil, y=nil}
     local canvas_settings = {
@@ -31,7 +32,7 @@ end
 
 function Path:update(dt)
     if not self.aborted then
-        self.elapsed = self.elapsed + dt
+        self.elapsed = self.elapsed + dt * 0.05
     else
         self.elapsed = math.max(self.elapsed - (dt * self.abort_speed), 0)
     end
@@ -39,7 +40,7 @@ end
 
 
 local function pixelClear(x, y, r, g, b, a)
-    return 0.3, 0.3, 0.3, 1.0
+    return 0, 0, 0, 1.0
 end
 function Path:reset_image()
     print("cl")
@@ -56,10 +57,13 @@ end
 
 function Path:setPixel(x, y)
     print("set "..x.." "..y)
-    self.image_data:setPixel(x, y, 1,1,1,1)--self.elapsed, 1.0, 1.0, 1.0)
+    local check = self:checkPixel(x,y)
+    print(check)
+    self.image_data:setPixel(x, y, self.elapsed, 0.1, 0.1, 1.0)
     self.last.x = x
     self.last.y = y
     self.last_color = self.elapsed
+    print("last color: "..self.last_color)
 end
 
 function Path:extend_to(x, y)
