@@ -54,6 +54,7 @@ function Qix:beginPath()
         return
     end
     self.current_path = Path:new(self.size.x, self.size.y)
+    self.current_path:beginPath(self.cursor.x, self.cursor.y)
 end
 
 function Qix:endPath()

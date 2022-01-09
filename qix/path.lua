@@ -49,16 +49,49 @@ end
 function Path:beginPath(x, y)
     self.elapsed = 0
     --self:reset_image()
+    self.last = {x=0,y=0}
     self:setPixel(x,y)
     self.image:replacePixels(self.image_data)
 end
 
 function Path:setPixel(x, y)
+    print("set "..x.." "..y)
     self.image_data:setPixel(x, y, 1,1,1,1)--self.elapsed, 1.0, 1.0, 1.0)
+    self.last.x = x
+    self.last.y = y
     self.last_color = self.elapsed
 end
+
 function Path:extend_to(x, y)
     print("Extend "..x.." "..y)
+    local dx = math.abs(x - self.last.x)
+    local dy = math.abs(y - self.last.y)
+    local sx,sy
+    if self.last.x < x then sx=1 else sx=-1 end
+    if self.last.y < y then sy=1 else sy=-1 end
+    local err = dx-dy
+
+
+    print("dx "..dx.." dy "..dy)
+    print("sx "..dx.." sy "..dy)
+
+    local cont = true
+    while cont do 
+        self:setPixel(self.last.x, self.last.y)
+        if (math.abs(self.last.x - x) < 1) and (math.abs(self.last.y - y) < 1) then
+            cont = false
+        end
+        local e2 = 2*err
+        if e2 > -dy then
+            err = err-dy
+            self.last.x  = self.last.x + sx
+        end
+        if e2 < dx then
+            err = err+dx
+            self.last.y = self.last.y + sy
+        end
+    end
+    
     self:setPixel(x, y)
     self.image:replacePixels(self.image_data)
 end
